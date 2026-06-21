@@ -1,0 +1,50 @@
+{
+  "name": "solution-factory",
+  "version": "1.0.0",
+  "description": "A unified plan-mode solution proposal production plugin that combines requirement decomposition, company capability matching, a browser web workbench, server-safe PPT script workbench contracts, image-prompt generation, and downstream PPT handoff boundaries.",
+  "author": {
+    "name": "GW Presales",
+    "email": "solution-factory@ganweisoft.com",
+    "url": "https://www.ganweisoft.com/"
+  },
+  "homepage": "",
+  "repository": "",
+  "license": "Internal",
+  "keywords": [
+    "solution",
+    "presales",
+    "requirements",
+    "multi-agent",
+    "powerpoint",
+    "enterprise materials"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Solution Factory",
+    "shortDescription": "Plan-first solution proposal production line for requirements, capability matching, and PPT inputs.",
+    "longDescription": "A standardized solution-department workflow that starts in Plan mode, asks operators for project background, audience, output goals, all source materials, missing evidence, and PPT style references, then uses an orchestrator and specialized sub-agents to ingest materials, build a company capability library, decompose requirements, match capabilities, refine implementation paths, create scenario deep dives, analyze style templates, and produce reviewable PPT scripts plus image-production prompts. Version 1.0 includes the marker-1 browser web workbench under deploy/web-workbench and the server-side script workbench contract: the verified production path is company knowledge base + customer materials + operator instructions -> page-level PPT script + page-level image prompts -> Markdown/ZIP export. Image PPT and editable PPT remain downstream reviewed handoffs unless their real executors are explicitly connected.",
+    "developerName": "GW Presales",
+    "category": "Productivity",
+    "capabilities": [
+      "Requirement decomposition",
+      "Plan-mode operator intake",
+      "Material upload checklist",
+      "Capability matching",
+      "PPT style template analysis",
+      "Browser web workbench",
+      "Server-safe PPT script workbench",
+      "Markdown and ZIP script package export",
+      "PPT script production",
+      "NotebookLM prompt production",
+      "Scenario deep-dive scripting",
+      "Multi-agent orchestration",
+      "Evidence-based QA"
+    ],
+    "defaultPrompt": [
+      "用 solution-factory 的Plan模式启动项目，先问背景、材料和风格参考。",
+      "根据我上传的客户材料和公司资料，梳理需求、能力匹配、实施路径和PPT脚本。",
+      "启动本机网页工作台，上传材料后生成可审阅脚本和逐页图片提示词。"
+    ],
+    "brandColor": "#006B8F"
+  }
+}

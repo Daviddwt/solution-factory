@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Solution Factory Artifact Workspace",
+  "type": "object",
+  "required": [
+    "material_index",
+    "company_capability_library",
+    "requirement_pack",
+    "capability_match_matrix",
+    "implementation_blueprint",
+    "ppt_script",
+    "visual_plan"
+  ],
+  "properties": {
+    "material_index": {
+      "type": "object",
+      "required": ["meta", "materials"],
+      "properties": {
+        "materials": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "path", "file_type", "source_bucket", "availability", "extract_policy"]
+          }
+        }
+      }
+    },
+    "company_capability_library": {
+      "type": "object",
+      "required": ["meta", "capabilities"],
+      "properties": {
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "product_family", "capability_type", "scenarios", "source_refs", "confidence"]
+          }
+        }
+      }
+    },
+    "requirement_pack": {
+      "type": "object",
+      "required": ["meta", "requirements"],
+      "properties": {
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "scene", "roles", "pains", "target_state", "processes", "data_objects", "interfaces", "metrics", "capability_refs", "source_refs", "open_questions"]
+          }
+        }
+      }
+    },
+    "capability_match_matrix": {
+      "type": "object",
+      "required": ["meta", "matches"],
+      "properties": {
+        "matches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["requirement_id", "capability_ids", "fit_level", "rationale", "source_refs"]
+          }
+        }
+      }
+    },
+    "implementation_blueprint": {
+      "type": "object",
+      "required": ["meta", "work_items", "stages"]
+    },
+    "ppt_script": {
+      "type": "object",
+      "required": ["meta", "slides"],
+      "properties": {
+        "slides": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["page_id", "title", "core_message", "narration", "visual_type", "requirement_refs", "capability_refs", "source_refs"]
+          }
+        }
+      }
+    },
+    "visual_plan": {
+      "type": "object",
+      "required": ["meta", "slides"],
+      "properties": {
+        "slides": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["page_id", "visual_type", "diagram_spec", "generation_method", "source_refs"]
+          }
+        }
+      }
+    }
+  }
+}

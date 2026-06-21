@@ -1,0 +1,24 @@
+{
+  "name": "solution-factory-server-cli",
+  "displayName": "Solution Factory Server CLI",
+  "version": "1.0.0",
+  "type": "cli-bundle",
+  "description": "Portable server-side CLI for generating reviewable PPT scripts and image-production prompts from company baselines and customer materials.",
+  "entrypoints": {
+    "healthcheck": "deploy/server/healthcheck.sh",
+    "cli": "deploy/server/run-cli.sh"
+  },
+  "capabilities": [
+    "material_intake",
+    "knowledge_base_inventory",
+    "ppt_script_generation_contract",
+    "image_prompt_generation",
+    "markdown_zip_export"
+  ],
+  "boundaries": [
+    "Does not generate final slide images.",
+    "Does not generate image-only PPTX.",
+    "Does not rebuild editable PPTX.",
+    "Only verified model adapters may be invoked."
+  ]
+}
