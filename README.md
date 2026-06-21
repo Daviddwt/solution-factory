@@ -15,6 +15,14 @@ Solution Factory 是面向解决方案、售前、产品和交付团队的 AI PP
 请自行读取注意事项、下载最新分享包、安装插件、打开网页工作台并完成验证。
 ```
 
+## 图文教程
+
+![Solution Factory 教程页预览](docs/tutorial-web/preview.png)
+
+可视化教程文件：[docs/tutorial-web/index.html](docs/tutorial-web/index.html)
+
+分享给同事时，只需要发送上面的 Codex 安装指令。让 Codex 自行读取仓库说明、下载最新分享包、安装插件、打开网页工作台并完成验证。
+
 ## 当前生产边界
 
 ```text

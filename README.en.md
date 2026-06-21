@@ -15,6 +15,14 @@ Please install the Codex plugin from this URL: https://github.com/Daviddwt/solut
 Read the notes, download the latest release package, install the plugin, open the web workbench, and verify it works.
 ```
 
+## Visual Guide
+
+![Solution Factory visual guide preview](docs/tutorial-web/preview.png)
+
+Visual guide file: [docs/tutorial-web/index.html](docs/tutorial-web/index.html)
+
+When sharing with colleagues, send only the Codex installation prompt above. Let Codex read the repository notes, download the latest release package, install the plugin, open the web workbench, and verify it works.
+
 ## Current Capability Boundary
 
 ```text
