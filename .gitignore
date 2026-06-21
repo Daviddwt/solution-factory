@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+node_modules/
+.next/
+.env
+output/logs/
+output/pids/
+storage/jobs/*
+storage/workspaces/*
+storage/knowledge_base/*
+!storage/jobs/.gitkeep
+!storage/workspaces/.gitkeep
+!storage/knowledge_base/.gitkeep
