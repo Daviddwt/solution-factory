@@ -3,23 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Solution Factory 使用方法和技巧</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23075d88'/%3E%3Cpath d='M18 18h28v8H18zm0 14h28v6H18zm0 12h20v6H18z' fill='white'/%3E%3C/svg%3E" />
+    <title>Solution Factory | Codex 方案生产线</title>
+    <meta name="description" content="Solution Factory 是面向解决方案、售前、产品和交付团队的 Codex 插件，用于把客户资料整理成可审阅的 PPT 脚本与图片生产提示词。" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071526'/%3E%3Cpath d='M14 18h36v8H14zm0 14h26v6H14zm0 12h18v6H14z' fill='%23ffffff'/%3E%3Cpath d='M43 32l7 6-7 6z' fill='%2338bdf8'/%3E%3C/svg%3E" />
     <style>
       :root {
-        --ink: #1e2933;
-        --muted: #657386;
-        --line: #d9e3ec;
+        color-scheme: light;
+        --ink: #0d1726;
+        --muted: #56657a;
+        --faint: #7d8a9a;
+        --line: #d8e0e8;
         --paper: #ffffff;
-        --bg: #eef3f7;
-        --blue-900: #075d88;
-        --blue-800: #0b6d9b;
-        --blue-700: #1184b8;
-        --blue-100: #e5f4fb;
-        --green: #167a4a;
-        --orange: #b45309;
-        --red: #b42318;
-        --shadow: 0 18px 50px rgba(12, 49, 74, 0.14);
+        --soft: #f4f7fb;
+        --navy: #071526;
+        --blue: #0f6b9a;
+        --cyan: #36b6e8;
+        --mint: #17a982;
+        --amber: #d89217;
+        --rose: #b4233a;
+        --shadow: 0 28px 80px rgba(12, 31, 54, 0.18);
       }
 
       * {
@@ -33,20 +35,13 @@
       body {
         margin: 0;
         color: var(--ink);
-        background:
-          linear-gradient(180deg, rgba(7, 93, 136, 0.08), rgba(238, 243, 247, 0) 360px),
-          var(--bg);
+        background: #eef3f7;
         font-family: -apple-system, "SF Pro Text", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
-        line-height: 1.75;
+        line-height: 1.72;
       }
 
       a {
-        color: var(--blue-800);
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
+        color: inherit;
       }
 
       code,
@@ -54,650 +49,897 @@
         font-family: "SF Mono", Menlo, Consolas, monospace;
       }
 
-      .hero {
-        background: var(--blue-900);
+      .skip-link {
+        position: absolute;
+        left: 16px;
+        top: -60px;
+        z-index: 20;
+        padding: 10px 14px;
+        background: #ffffff;
+        color: var(--navy);
+        border: 1px solid var(--line);
+      }
+
+      .skip-link:focus {
+        top: 16px;
+      }
+
+      .topbar {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        height: 66px;
+        padding: 0 28px;
+        color: #ffffff;
+        background: rgba(7, 21, 38, 0.78);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(16px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .brand-mark {
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        background: rgba(255, 255, 255, 0.08);
+        font-weight: 900;
+      }
+
+      .brand span {
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .topbar nav {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        color: rgba(255, 255, 255, 0.76);
+        font-size: 14px;
+      }
+
+      .topbar nav a {
+        text-decoration: none;
+      }
+
+      .topbar nav a:hover {
         color: #ffffff;
       }
 
-      .hero-inner {
-        width: min(1180px, calc(100% - 48px));
-        margin: 0 auto;
-        padding: 42px 0 38px;
+      .lang-toggle {
+        display: flex;
+        gap: 4px;
+        padding: 3px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+      }
+
+      .lang-toggle button {
+        min-width: 54px;
+        min-height: 34px;
+        border: 0;
+        color: rgba(255, 255, 255, 0.82);
+        background: transparent;
+        cursor: pointer;
+        font-weight: 800;
+      }
+
+      .lang-toggle button[aria-pressed="true"] {
+        color: var(--navy);
+        background: #ffffff;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 84vh;
+        color: #ffffff;
+        overflow: hidden;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 330px;
-        gap: 44px;
         align-items: end;
       }
 
-      .eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 5px 10px;
-        border: 1px solid rgba(255, 255, 255, 0.28);
-        color: rgba(255, 255, 255, 0.88);
-        font-size: 13px;
-        line-height: 1.2;
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(7, 21, 38, 0.95), rgba(7, 21, 38, 0.72) 48%, rgba(7, 21, 38, 0.36)),
+          url("assets/local-web-create.png") center / cover no-repeat;
       }
 
-      .hero h1 {
-        margin: 18px 0 14px;
-        font-size: clamp(34px, 5vw, 56px);
+      .hero::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+        width: min(1180px, calc(100% - 48px));
+        margin: 0 auto;
+        padding: 128px 0 78px;
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 22px;
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .kicker::before {
+        content: "";
+        width: 34px;
+        height: 2px;
+        background: var(--cyan);
+      }
+
+      h1 {
+        max-width: 860px;
+        margin: 0;
+        font-size: 58px;
         line-height: 1.08;
         letter-spacing: 0;
       }
 
-      .hero p {
-        max-width: 780px;
-        margin: 0;
-        color: rgba(255, 255, 255, 0.86);
-        font-size: 18px;
+      .hero-copy {
+        max-width: 770px;
+        margin: 24px 0 0;
+        color: rgba(255, 255, 255, 0.84);
+        font-size: 20px;
       }
 
-      .hero-panel {
-        border: 1px solid rgba(255, 255, 255, 0.24);
-        background: rgba(255, 255, 255, 0.08);
-        padding: 20px;
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 34px;
       }
 
-      .hero-panel strong {
-        display: block;
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 0 18px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
         color: #ffffff;
-        font-size: 15px;
-        margin-bottom: 8px;
-      }
-
-      .hero-panel span {
-        display: block;
-        color: rgba(255, 255, 255, 0.82);
-        font-size: 14px;
-      }
-
-      .layout {
-        width: min(1180px, calc(100% - 48px));
-        margin: 34px auto 80px;
-        display: grid;
-        grid-template-columns: 250px minmax(0, 1fr);
-        gap: 28px;
-        align-items: start;
-      }
-
-      .toc {
-        position: sticky;
-        top: 18px;
-        background: var(--paper);
-        border: 1px solid var(--line);
-        box-shadow: 0 8px 24px rgba(12, 49, 74, 0.08);
-        padding: 18px;
-      }
-
-      .lang-toggle {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-bottom: 18px;
-      }
-
-      .lang-toggle button {
-        min-height: 38px;
-        border: 1px solid #b9d9ea;
-        background: #f8fbfd;
-        color: var(--blue-900);
-        font-weight: 800;
+        background: rgba(255, 255, 255, 0.08);
+        text-decoration: none;
+        font-weight: 850;
         cursor: pointer;
       }
 
-      .lang-toggle button[aria-pressed="true"] {
-        background: var(--blue-900);
-        border-color: var(--blue-900);
-        color: #ffffff;
+      .button.primary {
+        color: var(--navy);
+        background: #ffffff;
       }
 
-      .toc-title {
-        margin: 0 0 12px;
-        color: var(--blue-900);
-        font-weight: 700;
-      }
-
-      .toc nav {
+      .hero-strip {
+        position: relative;
+        z-index: 1;
+        width: min(1180px, calc(100% - 48px));
+        margin: 0 auto 34px;
         display: grid;
-        gap: 8px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(7, 21, 38, 0.52);
+        backdrop-filter: blur(18px);
       }
 
-      .toc a {
+      .metric {
+        padding: 18px 20px;
+        border-right: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .metric:last-child {
+        border-right: 0;
+      }
+
+      .metric strong {
         display: block;
-        padding: 7px 9px;
-        color: var(--muted);
-        border-left: 3px solid transparent;
-        font-size: 14px;
+        color: #ffffff;
+        font-size: 16px;
       }
 
-      .toc a:hover {
-        color: var(--blue-900);
-        border-left-color: var(--blue-700);
-        background: var(--blue-100);
-        text-decoration: none;
+      .metric span {
+        display: block;
+        margin-top: 4px;
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 13px;
       }
 
-      .article {
-        display: grid;
-        gap: 28px;
+      .band {
+        padding: 84px 0;
       }
 
-      .section {
+      .band.paper {
         background: var(--paper);
-        border: 1px solid var(--line);
-        box-shadow: var(--shadow);
-        padding: clamp(24px, 4vw, 44px);
       }
 
-      .section h2 {
-        margin: 0 0 16px;
-        color: var(--blue-900);
-        font-size: 28px;
-        line-height: 1.25;
+      .band.soft {
+        background: var(--soft);
+      }
+
+      .band.dark {
+        color: #ffffff;
+        background: var(--navy);
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 48px));
+        margin: 0 auto;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 0.85fr) minmax(280px, 0.45fr);
+        gap: 54px;
+        align-items: end;
+        margin-bottom: 36px;
+      }
+
+      .section-eyebrow {
+        margin: 0 0 12px;
+        color: var(--blue);
+        font-size: 13px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .dark .section-eyebrow {
+        color: var(--cyan);
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 38px;
+        line-height: 1.16;
         letter-spacing: 0;
       }
 
-      .section h3 {
-        margin: 28px 0 10px;
-        font-size: 20px;
-        line-height: 1.35;
-        color: #253747;
+      .section-head p {
+        margin: 0;
+        color: var(--muted);
       }
 
-      .section p {
-        margin: 10px 0;
+      .dark .section-head p {
+        color: rgba(255, 255, 255, 0.7);
       }
 
-      .lead {
-        font-size: 17px;
-        color: #334155;
-      }
-
-      .pipeline {
+      .install-box {
         display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-        gap: 10px;
-        margin: 22px 0 8px;
-      }
-
-      .pipe-step {
-        min-height: 84px;
-        padding: 14px 12px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        background: var(--blue-100);
-        border: 1px solid #b9d9ea;
-      }
-
-      .pipe-step span {
-        color: var(--blue-900);
-        font-size: 12px;
-        font-weight: 700;
-      }
-
-      .pipe-step strong {
-        font-size: 14px;
-        line-height: 1.35;
-      }
-
-      .notice {
-        margin: 18px 0;
-        padding: 14px 16px;
-        border-left: 4px solid var(--orange);
-        background: #fff7ed;
-        color: #6b3a08;
-      }
-
-      .success {
-        border-left-color: var(--green);
-        background: #effaf3;
-        color: #14532d;
-      }
-
-      .danger {
-        border-left-color: var(--red);
-        background: #fff1f1;
-        color: #7f1d1d;
-      }
-
-      .mode-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 18px;
-      }
-
-      .mode {
+        grid-template-columns: minmax(0, 1fr) 220px;
+        gap: 22px;
+        align-items: stretch;
         border: 1px solid var(--line);
-        background: #fbfdff;
-        padding: 20px;
+        background: #ffffff;
+        box-shadow: var(--shadow);
       }
 
-      .mode h3 {
-        margin-top: 0;
-      }
-
-      .cmd {
-        margin: 14px 0;
-        padding: 18px 20px;
+      .install-command {
+        margin: 0;
+        padding: 28px;
         overflow-x: auto;
+        color: #d7e9f7;
+        background: #071526;
+        font-size: 15px;
+        line-height: 1.75;
         white-space: pre-wrap;
-        color: #e5eef6;
-        background: #071a2b;
-        border: 1px solid #15324f;
-        font-size: 14px;
-        line-height: 1.65;
       }
 
-      .cmd .label {
-        display: block;
-        margin-bottom: 8px;
-        color: #8cd2ff;
+      .install-side {
+        display: grid;
+        align-content: center;
+        gap: 14px;
+        padding: 24px;
+        background: #f8fbfd;
+      }
+
+      .install-side strong {
+        font-size: 18px;
+      }
+
+      .copy-status {
+        min-height: 22px;
+        color: var(--mint);
+        font-size: 13px;
         font-weight: 800;
       }
 
-      .step-list {
+      .pain-grid,
+      .pipeline-grid,
+      .boundary-grid {
         display: grid;
-        gap: 14px;
-        margin: 18px 0;
-        counter-reset: steps;
+        gap: 16px;
       }
 
-      .step {
-        position: relative;
-        padding: 16px 18px 16px 58px;
+      .pain-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .pain-card,
+      .step-card,
+      .boundary-card,
+      .thread-card {
         border: 1px solid var(--line);
-        background: #fbfdff;
+        background: #ffffff;
       }
 
-      .step::before {
-        counter-increment: steps;
-        content: counter(steps);
-        position: absolute;
-        left: 18px;
-        top: 18px;
-        width: 26px;
-        height: 26px;
-        display: grid;
+      .pain-card {
+        padding: 24px;
+      }
+
+      .pain-card b,
+      .step-card b,
+      .boundary-card b {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+
+      .pain-card p,
+      .step-card p,
+      .boundary-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .pipeline-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+
+      .step-card {
+        min-height: 174px;
+        padding: 18px;
+      }
+
+      .step-no {
+        display: inline-grid;
         place-items: center;
-        background: var(--blue-900);
+        width: 34px;
+        height: 34px;
+        margin-bottom: 24px;
         color: #ffffff;
+        background: var(--blue);
         font-size: 13px;
         font-weight: 900;
       }
 
-      .step strong {
-        display: block;
-        color: #243647;
-      }
-
-      .tips-grid {
+      .screenshot-layout {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
+        grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.55fr);
+        gap: 28px;
+        align-items: start;
       }
 
-      .tip {
-        border: 1px solid var(--line);
-        padding: 18px;
-        background: #fbfdff;
+      .product-shot {
+        margin: 0;
+        border: 1px solid #ccd9e4;
+        background: #ffffff;
+        box-shadow: var(--shadow);
       }
 
-      .tip h3 {
-        margin-top: 0;
-      }
-
-      figure {
-        margin: 24px 0 0;
-        padding: 14px;
-        border: 1px solid var(--line);
-        background: #f8fbfd;
-      }
-
-      figure img {
-        width: 100%;
+      .product-shot img {
         display: block;
-        border: 1px solid #d6e4ee;
+        width: 100%;
+      }
+
+      .product-shot figcaption {
+        padding: 12px 16px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .side-notes {
+        display: grid;
+        gap: 14px;
+      }
+
+      .note {
+        padding: 18px;
+        border: 1px solid var(--line);
         background: #ffffff;
       }
 
-      figcaption {
-        margin-top: 10px;
-        color: var(--muted);
-        font-size: 13px;
-        text-align: center;
+      .note strong {
+        display: block;
+        margin-bottom: 8px;
       }
 
-      table {
-        width: 100%;
-        margin-top: 14px;
-        border-collapse: collapse;
+      .note p {
+        margin: 0;
+        color: var(--muted);
         font-size: 14px;
       }
 
-      th {
-        background: var(--blue-900);
+      .boundary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .boundary-card {
+        padding: 24px;
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.16);
+      }
+
+      .boundary-card p {
+        color: rgba(255, 255, 255, 0.68);
+      }
+
+      .boundary-card b {
         color: #ffffff;
-        text-align: left;
       }
 
-      th,
-      td {
-        border: 1px solid #cbd8e3;
-        padding: 11px 12px;
-        vertical-align: top;
+      .x-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+        gap: 26px;
+        align-items: start;
       }
 
-      td {
-        background: #f8fbfd;
+      .strategy-list {
+        display: grid;
+        gap: 12px;
       }
 
-      .footer {
-        margin-top: 36px;
-        color: var(--muted);
+      .strategy-item {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+        padding: 16px;
+        border: 1px solid var(--line);
+        background: #ffffff;
+      }
+
+      .strategy-item span {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        color: #ffffff;
+        background: var(--navy);
         font-size: 13px;
-        text-align: center;
+        font-weight: 900;
       }
 
-      body[data-lang="zh"] [data-lang-panel="en"],
-      body[data-lang="en"] [data-lang-panel="zh"] {
+      .strategy-item p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .thread-stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .thread-card {
+        padding: 18px 20px;
+        color: #d8e5ee;
+        background: #101820;
+        border-color: #273341;
+      }
+
+      .thread-card p {
+        margin: 0;
+        white-space: pre-wrap;
+      }
+
+      .thread-card small {
+        display: block;
+        margin-bottom: 8px;
+        color: #84d7ff;
+        font-weight: 900;
+      }
+
+      .thread-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 14px;
+      }
+
+      .footer-cta {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 24px;
+        align-items: center;
+        padding: 34px;
+        color: #ffffff;
+        background: #0b2336;
+      }
+
+      .footer-cta h2 {
+        font-size: 30px;
+      }
+
+      .footer-cta p {
+        margin: 10px 0 0;
+        color: rgba(255, 255, 255, 0.72);
+      }
+
+      .repo-link {
+        color: #ffffff;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.52);
+      }
+
+      [hidden] {
         display: none !important;
       }
 
-      @media (max-width: 920px) {
-        .hero-inner,
-        .layout {
+      @media (max-width: 1040px) {
+        h1 {
+          font-size: 46px;
+        }
+
+        .section-head,
+        .screenshot-layout,
+        .x-layout,
+        .install-box,
+        .footer-cta {
           grid-template-columns: 1fr;
         }
 
-        .toc {
-          position: static;
-        }
-
-        .pipeline,
-        .mode-grid,
-        .tips-grid {
-          grid-template-columns: 1fr;
+        .pipeline-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
         }
       }
 
-      @media print {
-        body {
-          background: #ffffff;
+      @media (max-width: 760px) {
+        .topbar {
+          height: auto;
+          padding: 10px 16px 12px;
+          flex-wrap: wrap;
+          gap: 10px 14px;
         }
 
-        .hero,
-        .toc {
-          display: none;
+        .brand {
+          order: 1;
         }
 
-        .layout {
-          width: auto;
-          margin: 0;
-          display: block;
+        .lang-toggle {
+          order: 2;
+          margin-left: auto;
         }
 
-        .section {
-          box-shadow: none;
-          border: 0;
-          break-inside: avoid;
+        .lang-toggle button {
+          min-width: 48px;
+          min-height: 32px;
+        }
+
+        .topbar nav {
+          order: 3;
+          width: 100%;
+          gap: 14px;
+          overflow-x: auto;
+          padding-bottom: 4px;
+          font-size: 13px;
+        }
+
+        .hero-inner {
+          width: min(100% - 32px, 1180px);
+          padding-top: 156px;
+        }
+
+        h1 {
+          font-size: 35px;
+        }
+
+        .hero-copy {
+          font-size: 17px;
+        }
+
+        .hero-strip,
+        .pain-grid,
+        .pipeline-grid,
+        .boundary-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .metric {
+          border-right: 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .metric:last-child {
+          border-bottom: 0;
+        }
+
+        .band {
+          padding: 58px 0;
         }
       }
     </style>
   </head>
-  <body data-lang="zh">
-    <header class="hero">
-      <div class="hero-inner">
-        <div>
-          <div class="eyebrow">Solution Factory v1.0.0 · Internal Guide</div>
-          <h1 data-lang-panel="zh">解决方案部 AI PPT 脚本生产台</h1>
-          <h1 data-lang-panel="en">Solution Factory AI PPT Script Workbench</h1>
-          <p data-lang-panel="zh">给售前、解决方案、产品和交付同事看的上手教程：让 Codex 从 GitHub 安装插件，然后把客户材料变成可审阅的逐页 PPT 脚本与图片生产提示词。</p>
-          <p data-lang-panel="en">A practical guide for presales, solution, product, and delivery teams: let Codex install the plugin from GitHub, then turn customer materials into reviewable page-level PPT scripts and image-production prompts.</p>
-        </div>
-        <aside class="hero-panel">
-          <strong data-lang-panel="zh">当前真实边界</strong>
-          <strong data-lang-panel="en">Current Boundary</strong>
-          <span data-lang-panel="zh">生成需求梳理、能力匹配、逐页脚本和逐页图片提示词；最终图片 PPT 与可编辑 PPTX 是后续独立流程。</span>
-          <span data-lang-panel="en">Produces requirement breakdowns, capability matching, page scripts, and image prompts. Final image PPT and editable PPTX are separate downstream workflows.</span>
-        </aside>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+    <header class="topbar" aria-label="顶部导航">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">SF</div>
+        <span>Solution Factory</span>
+      </div>
+      <nav aria-label="页面导航">
+        <a href="#install">安装口令</a>
+        <a href="#pipeline">生产线</a>
+        <a href="#proof">界面截图</a>
+        <a href="#x-thread">X 推广文案</a>
+      </nav>
+      <div class="lang-toggle" aria-label="语言切换">
+        <button type="button" data-lang="zh" aria-pressed="true">中文</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
       </div>
     </header>
 
-    <div class="layout">
-      <aside class="toc">
-        <div class="lang-toggle" aria-label="language switch">
-          <button type="button" data-lang-button="zh" aria-pressed="true">中文</button>
-          <button type="button" data-lang-button="en" aria-pressed="false">English</button>
+    <main id="main">
+      <section class="hero" data-screen-label="Hero">
+        <div class="hero-inner">
+          <div class="kicker" data-copy="kicker">Codex Plugin · Proposal Workflow</div>
+          <h1 data-copy="hero-title">把方案 PPT 的前半段，做成一条可复用生产线。</h1>
+          <p class="hero-copy" data-copy="hero-subtitle">
+            Solution Factory 把客户资料、公司能力、需求拆解和逐页 PPT 脚本放进同一条流程里。它不承诺“一键生成最终 PPT”，只把最容易乱的前置工作变成可审阅、可追溯、可交接的标准产物。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#install">复制安装口令</a>
+            <a class="button" href="https://github.com/Daviddwt/solution-factory" target="_blank" rel="noreferrer">打开 GitHub</a>
+          </div>
         </div>
-        <p class="toc-title" data-lang-panel="zh">目录</p>
-        <p class="toc-title" data-lang-panel="en">Contents</p>
-        <nav data-lang-panel="zh">
-          <a href="#positioning">工具定位</a>
-          <a href="#install">安装方式</a>
-          <a href="#create-task">创建任务</a>
-          <a href="#tips">使用技巧</a>
-          <a href="#faq">常见问题</a>
-          <a href="#verified">验证结果</a>
-        </nav>
-        <nav data-lang-panel="en">
-          <a href="#positioning">Positioning</a>
-          <a href="#install">Install</a>
-          <a href="#create-task">Create A Job</a>
-          <a href="#tips">Tips</a>
-          <a href="#faq">FAQ</a>
-          <a href="#verified">Validation</a>
-        </nav>
-      </aside>
+        <div class="hero-strip" aria-label="核心信息">
+          <div class="metric"><strong>需求拆解</strong><span>场景、角色、痛点、目标、流程</span></div>
+          <div class="metric"><strong>能力匹配</strong><span>existing / integration / custom_dev</span></div>
+          <div class="metric"><strong>逐页脚本</strong><span>标题、观点、讲稿、图示、证据</span></div>
+          <div class="metric"><strong>真实边界</strong><span>脚本与提示词，不偷换成最终 PPT</span></div>
+        </div>
+      </section>
 
-      <main class="article">
-        <section class="section" id="positioning">
-          <div data-lang-panel="zh">
-            <h2>一、这个工具是做什么的</h2>
-            <p class="lead">它不是“一键出最终 PPT”的黑盒，而是把解决方案生产过程标准化，让大家先把事实、需求、能力边界和每页怎么讲整理清楚。</p>
-            <div class="pipeline" aria-label="Solution Factory 生产线">
-              <div class="pipe-step"><span>01</span><strong>客户资料</strong></div>
-              <div class="pipe-step"><span>02</span><strong>公司知识库</strong></div>
-              <div class="pipe-step"><span>03</span><strong>需求梳理</strong></div>
-              <div class="pipe-step"><span>04</span><strong>能力匹配</strong></div>
-              <div class="pipe-step"><span>05</span><strong>逐页脚本</strong></div>
-              <div class="pipe-step"><span>06</span><strong>图片提示词</strong></div>
+      <section class="band paper" id="install" data-screen-label="Install prompt">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="section-eyebrow">Installation Strategy</p>
+              <h2>推广时不要教人敲命令，只给 Codex 一句话。</h2>
             </div>
-            <div class="notice danger">请不要把它说成已经自动生成最终图片 PPT 或可编辑 PPTX。当前可确认的是脚本和提示词生产能力。</div>
+            <p>这才是面向同事和外部用户的低摩擦入口：让 Codex 自己读 README、找 Release、下载安装、启动网页工作台并验证。</p>
           </div>
-          <div data-lang-panel="en">
-            <h2>1. What This Tool Does</h2>
-            <p class="lead">It is not a one-click final PPT generator. It standardizes the solution-production process so the team can clarify facts, requirements, capability boundaries, and page-level narration first.</p>
-            <div class="pipeline" aria-label="Solution Factory pipeline">
-              <div class="pipe-step"><span>01</span><strong>Customer Materials</strong></div>
-              <div class="pipe-step"><span>02</span><strong>Company Knowledge</strong></div>
-              <div class="pipe-step"><span>03</span><strong>Requirements</strong></div>
-              <div class="pipe-step"><span>04</span><strong>Capability Match</strong></div>
-              <div class="pipe-step"><span>05</span><strong>Page Scripts</strong></div>
-              <div class="pipe-step"><span>06</span><strong>Image Prompts</strong></div>
-            </div>
-            <div class="notice danger">Do not describe it as automatically producing final image PPT files or editable PPTX files. The verified capability is script and prompt production.</div>
-          </div>
-        </section>
-
-        <section class="section" id="install">
-          <div data-lang-panel="zh">
-            <h2>二、如何安装</h2>
-            <p class="lead">不要让同事自己下载、解压和执行一堆命令。把安装动作交给 Codex。</p>
-            <pre class="cmd"><span class="label">复制给 Codex</span>请给我的 Codex 安装以下地址的插件：https://github.com/Daviddwt/solution-factory
+          <div class="install-box">
+            <pre class="install-command" id="installPrompt">请给我的 Codex 安装以下地址的插件：https://github.com/Daviddwt/solution-factory
 请自行读取注意事项、下载最新分享包、安装插件、打开网页工作台并完成验证。</pre>
-            <div class="notice success">Codex 会负责读取 GitHub 仓库说明、检查注意事项、下载分享包、安装插件、启动网页工作台并验证能否打开。</div>
-            <div class="notice">如果只是临时试用公司服务器版，不需要安装本机插件，请直接打开公司内部公告中的服务器网页地址。公开 GitHub 文档不会写公司内网地址。</div>
-          </div>
-          <div data-lang-panel="en">
-            <h2>2. How To Install</h2>
-            <p class="lead">Do not ask colleagues to download, unzip, and run multiple commands manually. Let Codex handle the installation.</p>
-            <pre class="cmd"><span class="label">Copy to Codex</span>Please install the Codex plugin from this URL: https://github.com/Daviddwt/solution-factory
-Read the notes, download the latest release package, install the plugin, open the web workbench, and verify it works.</pre>
-            <div class="notice success">Codex should read the GitHub instructions, check the notes, download the release package, install the plugin, start the web workbench, and verify the page opens.</div>
-            <div class="notice">For temporary use of the company server version, use the internal announcement URL. Public GitHub documentation should not expose internal network addresses.</div>
-          </div>
-        </section>
-
-        <section class="section" id="create-task">
-          <div data-lang-panel="zh">
-            <h2>三、如何创建一个任务</h2>
-            <div class="step-list">
-              <div class="step"><strong>填写提交人和标题</strong>提交人用于隔离任务，标题决定本次脚本主线。</div>
-              <div class="step"><strong>选择使用场景和受众</strong>客户汇报偏价值和路径，技术团队偏架构和接口。</div>
-              <div class="step"><strong>选择风格</strong>默认用“解决方案风”；客户有模板时上传参考 PPT/PDF/截图。</div>
-              <div class="step"><strong>上传或粘贴资料</strong>支持 docx、pdf、xlsx、pptx、png、jpg、md、txt。</div>
-              <div class="step"><strong>点击创建任务</strong>生成可审阅的逐页 PPT 脚本和逐页图片生产提示词。</div>
-            </div>
-            <figure>
-              <img src="assets/local-web-create.png" alt="本机网页工作台创建任务页面" />
-              <figcaption>创建任务页：左侧填写任务和资料，右侧管理公司知识库。</figcaption>
-            </figure>
-          </div>
-          <div data-lang-panel="en">
-            <h2>3. Create A Job</h2>
-            <div class="step-list">
-              <div class="step"><strong>Enter requester and title</strong>The requester separates jobs, and the title defines the story line.</div>
-              <div class="step"><strong>Select scenario and audience</strong>Executive presentations focus on value and roadmap; technical audiences need architecture and interfaces.</div>
-              <div class="step"><strong>Select style</strong>Use the default solution style, or upload reference PPT/PDF/screenshots when a customer style is required.</div>
-              <div class="step"><strong>Upload or paste materials</strong>Supported formats include docx, pdf, xlsx, pptx, png, jpg, md, and txt.</div>
-              <div class="step"><strong>Create the job</strong>The workbench generates reviewable page-level PPT scripts and page-level image prompts.</div>
-            </div>
-            <figure>
-              <img src="assets/local-web-create.png" alt="Local web workbench create page" />
-              <figcaption>Create page: fill in the job and materials on the left, manage company knowledge on the right.</figcaption>
-            </figure>
-          </div>
-        </section>
-
-        <section class="section" id="tips">
-          <div data-lang-panel="zh">
-            <h2>四、使用技巧</h2>
-            <div class="tips-grid">
-              <article class="tip">
-                <h3>先把客户事实写清楚</h3>
-                <p>接口开放情况、已有系统状态、点位数量、金额、上线时间、责任部门，没有材料依据就标记为“待客户确认”。</p>
-              </article>
-              <article class="tip">
-                <h3>客户有模板时一定上传风格参考</h3>
-                <p>参考 PPTX、PDF、截图、客户品牌模板都可以。补充说明里写清楚要保持标题栏、配色、表格、页脚和架构图风格一致。</p>
-              </article>
-              <article class="tip">
-                <h3>能力匹配不要写过头</h3>
-                <p>不是现有能力就写成 <code>integration</code>、<code>custom_dev</code> 或 <code>unclear</code>，不要包装成默认产品能力。</p>
-              </article>
-              <article class="tip">
-                <h3>先审脚本，再做图片 PPT</h3>
-                <p>脚本是源头，图片 PPT 是渲染层。先确认需求包和逐页脚本，再交给 NotebookLM / 图片 PPT 智能体。</p>
-              </article>
+            <div class="install-side">
+              <strong>把复杂安装藏到 Codex 后面</strong>
+              <p>对外只传播结果和入口，不传播终端细节。失败时也让 Codex 检查安装、服务、端口和网页。</p>
+              <button class="button primary" type="button" data-copy-target="installPrompt">复制口令</button>
+              <div class="copy-status" aria-live="polite"></div>
             </div>
           </div>
-          <div data-lang-panel="en">
-            <h2>4. Usage Tips</h2>
-            <div class="tips-grid">
-              <article class="tip">
-                <h3>Clarify customer facts first</h3>
-                <p>Interface availability, existing systems, site counts, amounts, timeline, and owners must be evidence-backed or marked as to be confirmed.</p>
-              </article>
-              <article class="tip">
-                <h3>Upload style references when required</h3>
-                <p>Reference PPTX, PDF, screenshots, brand templates, or approved decks help preserve title bars, colors, tables, footers, and architecture-diagram style.</p>
-              </article>
-              <article class="tip">
-                <h3>Do not overstate capability fit</h3>
-                <p>If it is not an existing capability, label it as <code>integration</code>, <code>custom_dev</code>, or <code>unclear</code>.</p>
-              </article>
-              <article class="tip">
-                <h3>Review scripts before image PPT</h3>
-                <p>The script is the source of truth. Confirm the requirement pack and page scripts before sending prompts to NotebookLM or an image PPT agent.</p>
-              </article>
+        </div>
+      </section>
+
+      <section class="band soft" data-screen-label="Problem">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="section-eyebrow">Why It Matters</p>
+              <h2>售前方案不是缺 PPT 工具，而是缺一套可靠的前置生产秩序。</h2>
+            </div>
+            <p>适合在 X 上讲的不是“我做了个工具”，而是“我把一个混乱工作流拆成了可复用方法”。</p>
+          </div>
+          <div class="pain-grid">
+            <article class="pain-card">
+              <b>资料很多，口径很散</b>
+              <p>客户材料、产品手册、案例、会议纪要分散在不同地方，直接做 PPT 很容易遗漏和乱承诺。</p>
+            </article>
+            <article class="pain-card">
+              <b>需求和能力边界混在一起</b>
+              <p>哪些是现有产品、哪些要集成、哪些要定制，必须先拆清楚，否则越到后面返工越大。</p>
+            </article>
+            <article class="pain-card">
+              <b>图片 PPT 不是源头</b>
+              <p>真正的源头应该是需求包、能力匹配表和逐页脚本。图片生成只负责表达，不负责替你判断事实。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="band paper" id="pipeline" data-screen-label="Pipeline">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="section-eyebrow">Production Line</p>
+              <h2>从“资料堆”到“可审脚本”，中间必须有 6 个标准环节。</h2>
+            </div>
+            <p>这套流程适合推广，因为它让同事知道：工具不是替你拍脑袋，而是把每一步的输入、输出和审核点显性化。</p>
+          </div>
+          <div class="pipeline-grid">
+            <article class="step-card"><span class="step-no">01</span><b>材料归集</b><p>客户资料、公司知识库、产品 FRS、参考 PPT 风格。</p></article>
+            <article class="step-card"><span class="step-no">02</span><b>需求拆解</b><p>场景、角色、痛点、目标、流程、数据、接口。</p></article>
+            <article class="step-card"><span class="step-no">03</span><b>能力匹配</b><p>标注 existing、configurable、integration、custom_dev、unclear。</p></article>
+            <article class="step-card"><span class="step-no">04</span><b>实现路径</b><p>产品模块、开发项、流程设计、数据流和阶段计划。</p></article>
+            <article class="step-card"><span class="step-no">05</span><b>逐页脚本</b><p>标题、核心观点、讲稿、图示类型、证据引用。</p></article>
+            <article class="step-card"><span class="step-no">06</span><b>图片提示词</b><p>交给 NotebookLM 或图片 PPT 智能体，作为渲染层执行。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="band soft" id="proof" data-screen-label="Product proof">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="section-eyebrow">Product Proof</p>
+              <h2>它有网页工作台，不只是一个提示词文档。</h2>
+            </div>
+            <p>推广页必须让人看到真实界面。截图负责建立可信度，文案负责降低上手门槛。</p>
+          </div>
+          <div class="screenshot-layout">
+            <figure class="product-shot">
+              <img src="assets/local-web-create.png" alt="Solution Factory 创建任务页面截图" />
+              <figcaption>创建任务页：填写项目背景、上传材料、选择场景受众、补充 PPT 风格要求。</figcaption>
+            </figure>
+            <aside class="side-notes" aria-label="使用说明">
+              <div class="note">
+                <strong>对同事怎么讲</strong>
+                <p>不要解释依赖、脚本和端口。只说“把 GitHub 地址发给 Codex，它会安装并打开网页”。</p>
+              </div>
+              <div class="note">
+                <strong>对外部用户怎么讲</strong>
+                <p>这是一套方案生产方法，不是万能 PPT 生成器。用户需要提供自己的材料和知识库。</p>
+              </div>
+              <div class="note">
+                <strong>失败时怎么讲</strong>
+                <p>网页打不开时，把错误交给 Codex 排查安装、服务进程、端口占用和日志，不让新用户自己猜。</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="band dark" data-screen-label="Capability boundary">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="section-eyebrow">Truthful Boundary</p>
+              <h2>推广可以有锋芒，但边界必须说实话。</h2>
+            </div>
+            <p>这一段要放在页面中部，而不是藏到 FAQ。可信的 AI 工具推广，先讲清楚什么能做，什么不能说成已经接入。</p>
+          </div>
+          <div class="boundary-grid">
+            <article class="boundary-card">
+              <b>已经验证</b>
+              <p>需求梳理、能力匹配、逐页 PPT 脚本、图片生产提示词、网页工作台和 Release 分享包。</p>
+            </article>
+            <article class="boundary-card">
+              <b>后续流程</b>
+              <p>图片 PPT 生成和图片 PPT 转可编辑 PPTX 是下游流程，不能把脚本生产台包装成最终交付器。</p>
+            </article>
+            <article class="boundary-card">
+              <b>敏感资料</b>
+              <p>公开 GitHub 不放合同正文、报价明细、个人信息、客户项目路径和公司内网地址。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="band paper" id="x-thread" data-screen-label="X thread strategy">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="section-eyebrow">X Writing Strategy</p>
+              <h2>推广文章不要写成说明书，要写成一条问题驱动的 thread。</h2>
+            </div>
+            <p>先讲痛点，再讲方法，再给 GitHub 地址。少说“强大”，多说“我把哪个工作流标准化了”。</p>
+          </div>
+          <div class="x-layout">
+            <div class="strategy-list">
+              <div class="strategy-item"><span>1</span><p><b>Hook</b><br />开头只讲一个强问题：做方案 PPT 最难的不是排版，而是需求、能力和证据没拆清楚。</p></div>
+              <div class="strategy-item"><span>2</span><p><b>Method</b><br />把生产线画出来：资料归集 -> 需求拆解 -> 能力匹配 -> 逐页脚本 -> 图片提示词。</p></div>
+              <div class="strategy-item"><span>3</span><p><b>Proof</b><br />放网页工作台截图和 GitHub Release 链接，证明它不是空想流程。</p></div>
+              <div class="strategy-item"><span>4</span><p><b>Boundary</b><br />主动说明不是最终 PPT 生成器，只生产脚本和提示词。这个反而增加可信度。</p></div>
+            </div>
+            <div>
+              <div class="thread-stack" id="threadCopy">
+                <article class="thread-card"><small>Post 1</small><p>做方案 PPT 最难的部分，往往不是排版，而是前面那一大团混乱资料：客户需求、产品能力、案例、接口、待确认事项，全都混在一起。</p></article>
+                <article class="thread-card"><small>Post 2</small><p>我把这部分做成了一个 Codex 插件：Solution Factory。它不是“一键生成最终 PPT”，而是把 PPT 前置生产线标准化。</p></article>
+                <article class="thread-card"><small>Post 3</small><p>流程是：客户资料 + 公司知识库 + 风格参考 -> 需求拆解 -> 能力匹配 -> 实现路径 -> 逐页 PPT 脚本 -> 图片生产提示词。</p></article>
+                <article class="thread-card"><small>Post 4</small><p>最重要的是能力边界：现有产品、可配置、需集成、定制开发、不明确，都要显式标注，不能把没有证据的能力写成默认现有能力。</p></article>
+                <article class="thread-card"><small>Post 5</small><p>安装也尽量简单：把 GitHub 地址给 Codex，让 Codex 自己读 README、下载 Release、安装插件、启动网页工作台并验证。</p></article>
+                <article class="thread-card"><small>Post 6</small><p>GitHub: https://github.com/Daviddwt/solution-factory</p></article>
+              </div>
+              <div class="thread-actions">
+                <button class="button primary" type="button" data-copy-thread="threadCopy">复制 X thread</button>
+              </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="section" id="faq">
-          <div data-lang-panel="zh">
-            <h2>五、常见问题</h2>
-            <h3>网页打不开怎么办</h3>
-            <pre class="cmd"><span class="label">复制给 Codex</span>Solution Factory 网页打不开，请帮我检查插件是否安装、服务是否启动、端口是否占用，并重新打开网页工作台。</pre>
-            <h3>为什么 GitHub 文档里没有公司服务器地址</h3>
-            <p>公司服务器地址属于内部信息。公开 GitHub 文档只写“请看内部公告”，不写具体内网 IP。</p>
-            <h3>为什么没有直接生成 PPTX</h3>
-            <p>当前工具负责生成可审阅的 PPT 脚本和逐页图片提示词。最终图片 PPT、可编辑 PPTX 需要走后续独立流程。</p>
-            <h3>PDF 或图片没有读出内容怎么办</h3>
-            <p>重要信息建议同时粘贴文字版，或者补充一份可读取的 Word / Markdown / 文本摘要。</p>
+      <section class="band soft" data-screen-label="Final CTA">
+        <div class="container">
+          <div class="footer-cta">
+            <div>
+              <h2>一句话总结：先把方案生产过程变可靠，再谈自动生成 PPT。</h2>
+              <p>Repo: <a class="repo-link" href="https://github.com/Daviddwt/solution-factory" target="_blank" rel="noreferrer">github.com/Daviddwt/solution-factory</a></p>
+            </div>
+            <a class="button primary" href="#install">回到安装口令</a>
           </div>
-          <div data-lang-panel="en">
-            <h2>5. FAQ</h2>
-            <h3>What if the page does not open?</h3>
-            <pre class="cmd"><span class="label">Copy to Codex</span>Solution Factory does not open. Please check whether the plugin is installed, whether the service is running, whether the port is occupied, and reopen the web workbench.</pre>
-            <h3>Why is the company server URL not in GitHub docs?</h3>
-            <p>The company server URL is internal information. Public GitHub documentation should point users to internal announcements instead of exposing an internal IP.</p>
-            <h3>Why does it not directly generate PPTX?</h3>
-            <p>This workbench produces reviewable PPT scripts and image prompts. Final image PPT and editable PPTX files belong to downstream workflows.</p>
-            <h3>What if PDF or image content is not extracted?</h3>
-            <p>Paste key information as text, or provide a readable Word / Markdown / text summary.</p>
-          </div>
-        </section>
-
-        <section class="section" id="verified">
-          <div data-lang-panel="zh">
-            <h2>六、已验证通过</h2>
-            <table>
-              <thead>
-                <tr><th>场景</th><th>结果</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>本机个人插件网页工作台</td><td>通过</td></tr>
-                <tr><td>同事分享包模拟安装网页工作台</td><td>通过</td></tr>
-                <tr><td>公司服务器网页工作台</td><td>通过</td></tr>
-              </tbody>
-            </table>
-            <figure>
-              <img src="assets/server-web-create.png" alt="公司服务器网页工作台创建任务页面" />
-              <figcaption>服务器网页工作台可直接创建任务；具体地址请看公司内部公告。</figcaption>
-            </figure>
-            <div class="notice success">健康检查确认：本机模式 worker_mode=codex，服务器模式 worker_mode=hermes，图片 PPT 执行器 image_ppt_executor.connected=false。</div>
-          </div>
-          <div data-lang-panel="en">
-            <h2>6. Validated</h2>
-            <table>
-              <thead>
-                <tr><th>Scenario</th><th>Result</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>Personal local plugin web workbench</td><td>Passed</td></tr>
-                <tr><td>Colleague share-package installation simulation</td><td>Passed</td></tr>
-                <tr><td>Company server web workbench</td><td>Passed</td></tr>
-              </tbody>
-            </table>
-            <figure>
-              <img src="assets/server-web-create.png" alt="Company server web workbench create page" />
-              <figcaption>The server workbench can create jobs directly. Use the URL from the internal company announcement.</figcaption>
-            </figure>
-            <div class="notice success">Health checks confirmed local mode worker_mode=codex, server mode worker_mode=hermes, and image_ppt_executor.connected=false.</div>
-          </div>
-        </section>
-
-        <p class="footer" data-lang-panel="zh">版本：Solution Factory v1.0.0。公开 GitHub 不包含客户资料、合同报价、个人信息或公司内网地址。</p>
-        <p class="footer" data-lang-panel="en">Version: Solution Factory v1.0.0. Public GitHub content excludes customer materials, contract prices, personal data, and internal server addresses.</p>
-      </main>
-    </div>
+        </div>
+      </section>
+    </main>
 
     <script>
-      const buttons = Array.from(document.querySelectorAll("[data-lang-button]"));
+      const zh = {
+        kicker: "Codex Plugin · Solution Workflow",
+        heroTitle: "把方案 PPT 的前半段，做成一条可复用生产线。",
+        heroSubtitle: "Solution Factory 把客户资料、公司能力、需求拆解和逐页 PPT 脚本放进同一条流程里。它不承诺“一键生成最终 PPT”，只把最容易乱的前置工作变成可审阅、可追溯、可交接的标准产物。"
+      };
+
+      const en = {
+        kicker: "Codex Plugin · Solution Workflow",
+        heroTitle: "Turn the messy first half of proposal decks into a reusable production line.",
+        heroSubtitle: "Solution Factory puts customer materials, company knowledge, requirement decomposition, and page-level PPT scripts into one reviewable workflow. It does not claim to generate final decks automatically. It standardizes the upstream work that usually causes rework."
+      };
+
       function setLang(lang) {
-        document.body.dataset.lang = lang;
-        document.documentElement.lang = lang === "en" ? "en" : "zh-CN";
-        buttons.forEach((button) => {
-          button.setAttribute("aria-pressed", String(button.dataset.langButton === lang));
+        const isEnglish = lang === "en";
+        document.documentElement.lang = isEnglish ? "en" : "zh-CN";
+        document.querySelector("[data-copy='kicker']").textContent = isEnglish ? en.kicker : zh.kicker;
+        document.querySelector("[data-copy='hero-title']").textContent = isEnglish ? en.heroTitle : zh.heroTitle;
+        document.querySelector("[data-copy='hero-subtitle']").textContent = isEnglish ? en.heroSubtitle : zh.heroSubtitle;
+        document.querySelectorAll("[data-lang]").forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.lang === lang));
         });
       }
 
-      buttons.forEach((button) => {
-        button.addEventListener("click", () => setLang(button.dataset.langButton));
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.addEventListener("click", () => setLang(button.dataset.lang));
+      });
+
+      async function copyText(text, statusTarget) {
+        try {
+          await navigator.clipboard.writeText(text);
+          if (statusTarget) statusTarget.textContent = "已复制";
+        } catch {
+          if (statusTarget) statusTarget.textContent = "复制失败，请手动选中文本";
+        }
+      }
+
+      document.querySelectorAll("[data-copy-target]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const target = document.getElementById(button.dataset.copyTarget);
+          const status = button.parentElement.querySelector(".copy-status");
+          copyText(target.textContent.trim(), status);
+        });
+      });
+
+      document.querySelectorAll("[data-copy-thread]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const target = document.getElementById(button.dataset.copyThread);
+          const text = Array.from(target.querySelectorAll(".thread-card p")).map((item) => item.textContent.trim()).join("\\n\\n");
+          copyText(text, null);
+          button.textContent = "已复制 X thread";
+          window.setTimeout(() => {
+            button.textContent = "复制 X thread";
+          }, 1800);
+        });
       });
     </script>
   </body>
